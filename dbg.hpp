@@ -1,5 +1,4 @@
-#include <bits/stdc++.h>
-
+#include <iostream>
 using namespace std;
 
 #define dbg(x...) cerr << "[" << #x << "] = ["; _print(x)

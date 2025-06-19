@@ -3,6 +3,7 @@ using namespace std;
 
 #define int long long
 #define vi vector<int>
+#define pii pair<int,int>
 #define x first
 #define y second
 #define fr(i,a,b) for(int i=a;i<b;i++)
@@ -12,7 +13,7 @@ using namespace std;
 template <typename T>istream&operator>>(istream& in, vector<T>& a){for (int i = 0; i < a.size(); ++i)in >> a[i];return in;}
 template <typename T>ostream&operator<<(ostream& out,vector<T>& a){for (int i = 0; i < a.size(); ++i) out << a[i] << " ";out << "\n";return out;}
 
-#ifdef DEBUG
+#ifdef AKLOCAL
 #include "dbg.hpp"
 #define dbg(x...) cerr << "[" << #x << "] = ["; _print(x)
 #else
@@ -28,11 +29,8 @@ signed main(){
     ios_base::sync_with_stdio(false);   
     cin.tie(NULL); cout.tie(NULL);
 
-    // freopen(".in", "r", stdin);
-    // freopen(".out", "w", stdout);
-
     int T = 1;          
-    // cin>>T;
+    cin>>T;
     for(int i=1;i<=T;i++) solve();
 
     return 0;
