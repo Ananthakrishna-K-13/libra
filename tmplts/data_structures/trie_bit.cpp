@@ -110,29 +110,6 @@ public:
         }
         return result;
     }
-
-    // (Optional) find the actual number y in trie that gives maxXor; returns that y.
-    // Assumes trie non-empty.
-    int findMaxXorPartner(int x) const {
-        BitTrieNode* node = root;
-        int y = 0;
-        for (int b = BIT_LEN - 1; b >= 0; b--) {
-            int bit = (x >> b) & 1;
-            int desired = bit ^ 1;
-            if (node->child[desired] && node->child[desired]->count > 0) {
-                // choose desired bit
-                y |= (desired << b);
-                node = node->child[desired];
-            } else if (node->child[bit] && node->child[bit]->count > 0) {
-                y |= (bit << b);
-                node = node->child[bit];
-            } else {
-                // Should not happen in correct usage
-                break;
-            }
-        }
-        return y;
-    }
 };
 
 // Example of usage in main for CP:
