@@ -2,6 +2,7 @@
 using namespace std;
 
 #define int long long
+#define float long double
 #define vi vector<int>
 #define pii pair<int,int>
 #define x first
@@ -22,7 +23,7 @@ template <typename T>ostream&operator<<(ostream& out,vector<T>& a){for (int i = 
 #endif
 
 void solve(){
-    
+
 }           
 
 signed main(){

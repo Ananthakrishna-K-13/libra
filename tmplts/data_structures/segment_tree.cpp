@@ -1,42 +1,115 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
+// 0 indexed usage
+// 0 indexed usage
+// 0 indexed usage
+// 0 indexed usage
+// 0 indexed usage
 
-//sum segment tree
-const int MAXN = 1e5;
-int n, t[(int)(4*MAXN)];
 
-// tl=0,tr=n-1,v=1
+struct SegmentTree {
+private:
+    // — your per‐node data lives here —
+    struct Node {
+        long long sum;
+        int       mx;
+        int       mn;
+        Node(long long _sum = 0, int _mx = INT_MIN, int _mn = INT_MAX) : sum(_sum), mx(_mx), mn(_mn) {}
+    };
 
-void build(vector<int> &a, int v, int tl, int tr) {
-    if (tl == tr) {
-        t[v] = a[tl];
-    } else {
-        int tm = (tl + tr) / 2;
-        build(a, v*2, tl, tm);
-        build(a, v*2+1, tm+1, tr);
-        t[v] = t[v*2] + t[v*2+1];
+    int n;
+    vector<Node> st;
+
+    Node merge(const Node &L, const Node &R) {  //change as per node
+        return Node(
+            L.sum + R.sum,
+            max(L.mx, R.mx),
+            min(L.mn, R.mn)
+        );
     }
-}
-int query(int v, int tl, int tr, int l, int r) {
-    if (l > r) 
-        return 0; //change eg inf for min
-    if (l == tl && r == tr) {
-        return t[v];
+
+    void build(const vector<int> &a, int p, int l, int r) {
+        if (l == r) {
+            st[p] = Node(a[l], a[l], a[l]);  // change as per node
+            return;
+        }
+        int m = (l + r) >> 1;
+        build(a, p<<1,   l,   m);
+        build(a, p<<1|1, m+1, r);
+        st[p] = merge(st[p<<1], st[p<<1|1]);
     }
-    int tm = (tl + tr) / 2;
-    return query(v*2, tl, tm, l, min(r, tm))
-           + query(v*2+1, tm+1, tr, max(l, tm+1), r);
-}
-void update(int v, int tl, int tr, int pos, int new_val) {
-    if (tl == tr) {
-        t[v] = new_val;
-    } else {
-        int tm = (tl + tr) / 2;
-        if (pos <= tm)
-            update(v*2, tl, tm, pos, new_val);
-        else
-            update(v*2+1, tm+1, tr, pos, new_val);
-        t[v] = t[v*2] + t[v*2+1];
+
+    void update(int p, int l, int r, int idx, int val) {
+        if (l == r) {
+            st[p] = Node(val, val, val); //change as per node
+            return;
+        }
+        int m = (l + r) >> 1;
+        if (idx <= m) update(p<<1,   l,   m, idx, val);
+        else          update(p<<1|1, m+1, r, idx, val);
+        st[p] = merge(st[p<<1], st[p<<1|1]);
     }
+
+    Node query(int p, int l, int r, int i, int j) {
+        if (j < l || r < i) 
+            return Node(0, INT_MIN, INT_MAX);  // identity - change as per node
+        if (i <= l && r <= j) 
+            return st[p];
+        int m = (l + r) >> 1;
+        Node L = query(p<<1,   l,   m, i, j);
+        Node R = query(p<<1|1, m+1, r, i, j);
+        return merge(L, R);
+    }
+
+public:
+    SegmentTree(const vector<int> &a) {
+        n = (int)a.size();
+        st.assign(4*n, Node());
+        build(a, 1, 0, n-1);
+    }
+
+    // set a[idx] = val
+    void update(int idx, int val) {
+        update(1, 0, n-1, idx, val);
+    }
+
+    // query [l..r]
+    // returns a tuple (sum, max, min).
+    tuple<long long,int,int> query(int l, int r) {
+        Node res = query(1, 0, n-1, l, r);
+        return { res.sum, res.mx, res.mn };
+    }
+};
+
+// — example usage —
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N, Q;
+    cin >> N >> Q;
+    vector<int> A(N);
+    for (int i = 0; i < N; i++) 
+        cin >> A[i];
+
+    SegmentTree st(A);
+
+    while (Q--) {
+        int type; 
+        cin >> type;
+        if (type == 1) {
+            int idx, v;
+            cin >> idx >> v;
+            st.update(idx-1, v);
+        } else {
+            int l, r;
+            cin >> l >> r;
+            auto [sum, mx, mn] = st.query(l-1, r-1);
+            cout << "sum=" << sum 
+                 << " max=" << mx 
+                 << " min=" << mn << "\n";
+        }
+    }
+    return 0;
 }

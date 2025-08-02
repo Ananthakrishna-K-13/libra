@@ -156,9 +156,6 @@ int main() {
         cin >> cmd >> s;
         if (cmd == "insert") {
             trie.insert(s);
-            // For CP, you may not need to print anything.
-            // Example feedback:
-            // cout << "Inserted: " << s << "\n";
         }
         else if (cmd == "search") {
             bool found = trie.search(s);
