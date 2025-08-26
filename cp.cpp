@@ -24,7 +24,7 @@ template <typename T>ostream&operator<<(ostream& out,vector<T>& a){for (int i = 
 
 void solve(){
     
-}           
+}
 
 signed main(){
     ios_base::sync_with_stdio(false);   
