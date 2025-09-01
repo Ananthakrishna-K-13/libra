@@ -2,10 +2,6 @@
 using namespace std;
 
 #define int long long
-#define float long double
-#define vi vector<long long>
-#define x first
-#define y second
 #define pb push_back
 #define all(x) (x).begin(), (x).end()
 
@@ -17,8 +13,8 @@ using namespace std;
 #define endl '\n'
 #endif
 
-void solve(){
-
+void solve(){   
+    
 }
 
 signed main(){
