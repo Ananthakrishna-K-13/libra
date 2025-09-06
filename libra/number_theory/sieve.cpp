@@ -5,7 +5,7 @@ const int mod = 998244353;
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MAXN = 1000000; // adjust as needed
+const int MAXN = 10000000; // adjust as needed
 vector<int> spf(MAXN+1); // smallest prime factor
 
 // Precompute SPF  in O(n log log n)
@@ -53,24 +53,4 @@ vector<int> getDivisors(int x) {
     sort(divisors.begin(), divisors.end());
     return divisors;
 }
-
-// ----------- Example usage -----------
-int main() {
-    sieve();
-
-    int n;
-    cout << "Enter number: ";
-    cin >> n;
-
-    auto divs = getDivisors(n);
-    cout << "Divisors of " << n << ":\n";
-    for (int d : divs) cout << d << " ";
-    cout << "\n";
-
-    auto pf = getPrimeFactors(n);
-    cout << "Prime factorization: ";
-    for (auto [p, e] : pf) cout << p << "^" << e << " ";
-    cout << "\n";
-}
-
 
