@@ -22,7 +22,7 @@ signed main(){
     cin.tie(NULL); cout.tie(NULL);
 
     int T = 1;          
-    cin>>T;
+    // cin>>T;
     for(int i=1;i<=T;i++) solve();
 
     return 0;
