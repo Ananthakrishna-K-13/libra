@@ -62,6 +62,22 @@ private:
         return merge(L, R);
     }
 
+    int get_k(int p, int l, int r, int k){
+        if(l==r) return l;
+
+        int m = (l+r)>>1;
+        
+        int cntl = st[2*p].sum;  //change as per node
+        int cntr =  st[2*p +1].sum;
+
+        if(cntl < k){
+            return get_k(2*p + 1,m+1,r,k-cntl);
+        }
+        else{
+            return get_k(2*p,l,m,k);
+        }
+    }
+
 public:
     SegmentTree(const vector<int> &a) {
         n = (int)a.size();
@@ -79,6 +95,11 @@ public:
     tuple<long long,int,int> query(int l, int r) {
         Node res = query(1, 0, n-1, l, r);
         return { res.sum, res.mx, res.mn };
+    }
+
+    //get index of kth one in a binary array (walking the st in O(log n))
+    int get_k(int k){
+        return get_k(1, 0, n-1,k);
     }
 };
 
