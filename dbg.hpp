@@ -3,7 +3,7 @@ using namespace std;
 
 #define dbg(x...) cerr << "[" << #x << "] = ["; _print(x)
 
-// void __print(int x) {cerr << x;}
+void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
 void __print(long long x) {cerr << x;}
 void __print(unsigned x) {cerr << x;}
