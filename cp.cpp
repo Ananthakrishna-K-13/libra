@@ -2,7 +2,7 @@
 using namespace std;
 
 #ifdef AKLOCAL
-include "dbg.hpp"
+#include "dbg.hpp"
 #else
 #define dbg(x...)
 #define endl '\n'
