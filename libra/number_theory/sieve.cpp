@@ -7,6 +7,7 @@ using namespace std;
 
 const int MAXN = 10000000; // adjust as needed
 vector<int> spf(MAXN+1); // smallest prime factor
+vector<int> primelist;
 
 // Precompute SPF  in O(n log log n)
 void sieve() {
@@ -17,6 +18,11 @@ void sieve() {
                 if (spf[j] == j) spf[j] = i;
             }
         }
+    }
+    for (int i = 2; i <= MAXN; i++) {
+    if (spf[i] == i) { 
+        primelist.push_back(i);
+    }
     }
 }
 
