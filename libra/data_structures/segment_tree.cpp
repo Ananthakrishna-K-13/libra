@@ -1,136 +1,139 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// 0 indexed usage
-// 0 indexed usage
-// 0 indexed usage
-// 0 indexed usage
-// 0 indexed usage
+// MODIFY THIS SECTION, BUILD and UPDATE
 
-
-struct SegmentTree {
-private:
-    // — your per‐node data lives here —
-    struct Node {
-        long long sum;
-        int       mx;
-        int       mn;
-        Node(long long _sum = 0, int _mx = INT_MIN, int _mn = INT_MAX) : sum(_sum), mx(_mx), mn(_mn) {}
-    };
-
-    int n;
-    vector<Node> st;
-
-    Node merge(const Node &L, const Node &R) {  //change as per node
-        return Node(
-            L.sum + R.sum,
-            max(L.mx, R.mx),
-            min(L.mn, R.mn)
-        );
-    }
-
-    void build(const vector<int> &a, int p, int l, int r) {
-        if (l == r) {
-            st[p] = Node(a[l], a[l], a[l]);  // change as per node
-            return;
-        }
-        int m = (l + r) >> 1;
-        build(a, p<<1,   l,   m);
-        build(a, p<<1|1, m+1, r);
-        st[p] = merge(st[p<<1], st[p<<1|1]);
-    }
-
-    void update(int p, int l, int r, int idx, int val) {
-        if (l == r) {
-            st[p] = Node(val, val, val); //change as per node
-            return;
-        }
-        int m = (l + r) >> 1;
-        if (idx <= m) update(p<<1,   l,   m, idx, val);
-        else          update(p<<1|1, m+1, r, idx, val);
-        st[p] = merge(st[p<<1], st[p<<1|1]);
-    }
-
-    Node query(int p, int l, int r, int i, int j) {
-        if (j < l || r < i) 
-            return Node(0, INT_MIN, INT_MAX);  // identity - change as per node
-        if (i <= l && r <= j) 
-            return st[p];
-        int m = (l + r) >> 1;
-        Node L = query(p<<1,   l,   m, i, j);
-        Node R = query(p<<1|1, m+1, r, i, j);
-        return merge(L, R);
-    }
-
-    int get_k(int p, int l, int r, int k){
-        if(l==r) return l;
-
-        int m = (l+r)>>1;
-        
-        int cntl = st[2*p].sum;  //change as per node
-        int cntr =  st[2*p +1].sum;
-
-        if(cntl < k){
-            return get_k(2*p + 1,m+1,r,k-cntl);
-        }
-        else{
-            return get_k(2*p,l,m,k);
-        }
-    }
-
-public:
-    SegmentTree(const vector<int> &a) {
-        n = (int)a.size();
-        st.assign(4*n, Node());
-        build(a, 1, 0, n-1);
-    }
-
-    // set a[idx] = val
-    void update(int idx, int val) {
-        update(1, 0, n-1, idx, val);
-    }
-
-    // query [l..r]
-    // returns a tuple (sum, max, min).
-    tuple<long long,int,int> query(int l, int r) {
-        Node res = query(1, 0, n-1, l, r);
-        return { res.sum, res.mx, res.mn };
-    }
-
-    //get index of kth one in a binary array (walking the st in O(log n))
-    int get_k(int k){
-        return get_k(1, 0, n-1,k);
+struct Node {
+    long long sum;
+    long long max_val;
+    
+    static Node neutral() {
+        return {0, (long long)-1e18}; 
     }
 };
 
-// — example usage —
-int main(){
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+// Merge logic
+Node merge(const Node& a, const Node& b) {
+    return {
+        a.sum + b.sum,
+        max(a.max_val, b.max_val)
+    };
+}
 
-    int N, Q;
-    cin >> N >> Q;
-    vector<int> A(N);
-    for (int i = 0; i < N; i++) 
-        cin >> A[i];
+// Descent Predicate
+// we get first index from the left where the check function is true
+bool check(const Node& node, long long k) {
+    return node.max_val >= k; 
+}
 
-    SegmentTree st(A);
+//  SEGMENT TREE TEMPLATE
 
-    while (Q--) {
-        int type; 
-        cin >> type;
-        if (type == 1) {
-            int idx, v;
-            cin >> idx >> v;
-            st.update(idx-1, v);
+struct SegTree {
+    int n;
+    vector<Node> tree;
+
+    SegTree(const vector<int>& a) {
+        n = a.size();
+        tree.resize(4 * n, Node::neutral());
+
+        build(a,1,0,n-1);
+    }
+
+    void build(const vector<int>& a, int node, int start, int end) {
+        if (start == end) {
+
+            // MODIFY THIS
+            // MODIFY THIS
+            // MODIFY THIS            
+            tree[node] = { (long long)a[start], (long long)a[start] };
+
         } else {
-            int l, r;
-            cin >> l >> r;
-            auto [sum, mx, mn] = st.query(l-1, r-1);
-            cout << "sum=" << sum 
-                 << " max=" << mx 
-                 << " min=" << mn << "\n";
+            int mid = (start + end) / 2;
+            build(a, 2 * node, start, mid);
+            build(a, 2 * node + 1, mid + 1, end);
+            tree[node] = merge(tree[2 * node], tree[2 * node + 1]);
         }
     }
+
+    void update(int idx, int val, int node, int start, int end) {
+        if (start == end) {
+
+            // MODIFY THIS   
+            // MODIFY THIS
+            // MODIFY THIS   
+            tree[node] = { (long long)val, (long long)val };
+
+        } else {
+            int mid = (start + end) / 2;
+            if (start <= idx && idx <= mid) {
+                update(idx, val, 2 * node, start, mid);
+            } else {
+                update(idx, val, 2 * node + 1, mid + 1, end);
+            }
+            tree[node] = merge(tree[2 * node], tree[2 * node + 1]);
+        }
+    }
+
+    Node query(int l, int r, int node, int start, int end) {
+        if (r < start || end < l) {
+            return Node::neutral();
+        }
+        if (l <= start && end <= r) {
+            return tree[node];
+        }
+        int mid = (start + end) / 2;
+        Node p1 = query(l, r, 2 * node, start, mid);
+        Node p2 = query(l, r, 2 * node + 1, mid + 1, end);
+        return merge(p1, p2);
+    }
+
+    // Descent: Find first index in range [l, r] where check reutrns true
+    int find_first(int l, int r, long long k, int node, int start, int end) {
+        if (start > r || end < l || !check(tree[node], k)) {
+            return -1;
+        }
+        
+        if (start == end) {
+            return start;
+        }
+        
+        int mid = (start + end) / 2;
+        int res = -1;
+        
+        // 2. Try Left
+        if (mid >= l) {
+            res = find_first(l, r, k, 2 * node, start, mid);
+        }
+        
+        // 3. Try Right if not found in Left
+        if (res == -1) {
+            res = find_first(l, r, k, 2 * node + 1, mid + 1, end);
+        }
+        
+        return res;
+    }
+
+    // Wrappers
+    void build(const vector<int>& a) { build(a, 1, 0, n - 1); }
+    void update(int idx, int val) { update(idx, val, 1, 0, n - 1); }
+    Node query(int l, int r) { return query(l, r, 1, 0, n - 1); }
+    int find_first(int l, int r, long long k) { return find_first(l, r, k, 1, 0, n - 1); }
+};
+
+int main() {
+    vector<int> arr = {1, 3, 5, 2, 4, 6};
+    int n = arr.size();
+    SegTree st(arr);
+
+    Node res = st.query(1, 4);
+
+    int idx = st.find_first(0, 5, 4); 
+    cout << "First index >= 4: " << idx << endl;
+
+    st.update(2, 1); 
+
+    idx = st.find_first(0, 5, 4);
+    cout << "First index >= 4: " << idx << endl;
+
     return 0;
 }

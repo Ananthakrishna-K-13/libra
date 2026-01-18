@@ -1,199 +1,169 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-// 0 based index
-// 0 based index
-// 0 based index
-// 0 based index
+// MODIFY THIS SECTION and UPDATE
 
-
-// --- MODIFY HERE (1/6) ---
-// Define the node struct. This holds the data for a range.
 struct Node {
-    long long val;
-    int sz;      // stores size of the range, useful for walking
+    long long sum;
+    long long max_val;
+    long long sz; 
 
-    // Default constructor (identity element for queries)
-    Node() : val(0), sz(0) {} 
-
-    // Leaf constructor
-    Node(long long v) : val(v), sz(1) {}
+    // Identity Element
+    static Node neutral() {
+        return {0, (long long)-4e18, 0}; 
+    }
+    
+    // Leaf Initialization: How to create a node from a single array value
+    static Node from_value(long long v) {
+        return {v, v, 1};
+    }
 };
 
-// --- MODIFY HERE (2/6) ---
-// Define the lazy struct. This holds the pending updates.
-struct Lazy {
-    long long val;
-    bool id;       // Flag to check if this lazy is a no-op (identity)
+// MERGE
+Node merge(const Node& a, const Node& b) {
+    // If one side is empty/neutral (size 0), return the other
+    if (a.sz == 0) return b;
+    if (b.sz == 0) return a;
+    
+    return {
+        a.sum + b.sum,
+        max(a.max_val, b.max_val),
+        a.sz + b.sz
+    };
+}
 
-    // Default constructor (identity element for updates)
-    Lazy() : val(0), id(true) {} 
-
-    // Update constructor
-    Lazy(long long v) : val(v), id(false) {}
+// TAG
+struct Tag {
+    long long add; 
+    
+    // Identity Tag
+    static Tag neutral() {
+        return {0};
+    }
 };
 
-class LazySegmentTree {
-public:
-    LazySegmentTree(int n) : n(n) {
-        t.resize(4 * n);
-        lz.resize(4 * n);
-    }
+// APPLY TAG
+void apply_tag(Node& node, const Tag& tag) {
+    if (node.sz == 0) return;
+    node.sum += tag.add * node.sz; // Range Add logic for Sum
+    node.max_val += tag.add;       // Range Add logic for Max
+}
 
-    LazySegmentTree(const vector<long long>& a) : n(a.size()) {
-        t.resize(4 * n);
-        lz.resize(4 * n);
-        build(1, 0, n - 1, a);
-    }
+// COMBINE TAGS: How to merge a new tag onto an existing one
+void combine_tags(Tag& old_tag, const Tag& new_tag) {
+    old_tag.add += new_tag.add;
+}
 
-    void update(int l, int r, long long val) {
-        update(1, 0, n - 1, l, r, Lazy(val));
-    }
+// CHECK (Descent): Predicate for finding an index
+// reuturns first index where check is true
+bool check(const Node& node, long long k) {
+    return node.max_val >= k;
+}
 
-    Node query(int l, int r) {
-        return query(1, 0, n - 1, l, r);
-    }
+// LAZY SEGMENT TREE
 
-    int find_first(int l, int r, long long val) {
-        return find_first(1, 0, n - 1, l, r, val);
-    }
-
-
-private:
+struct LazySegTree {
     int n;
-    vector<Node> t; // tree
-    vector<Lazy> lz; // lazy
+    vector<Node> tree;
+    vector<Tag> lazy;
 
-    // --- MODIFY HERE (3/6) ---
-    // Merge two nodes
-    Node merge(const Node& left, const Node& right) {
-        Node res;
+    LazySegTree(const vector<int>& a) {
+        n = a.size();
+        tree.resize(4 * n, Node::neutral());
+        lazy.resize(4 * n, Tag::neutral());
 
-        res.val = left.val + right.val; 
-        res.sz = left.sz + right.sz;
+        build(a,1,0,n-1);
+    }
+
+    void push(int node) {
+        if (lazy[node].add == 0) return; 
+
+        apply_tag(tree[2 * node], lazy[node]);
+        combine_tags(lazy[2 * node], lazy[node]);
+
+        apply_tag(tree[2 * node + 1], lazy[node]);
+        combine_tags(lazy[2 * node + 1], lazy[node]);
+
+        lazy[node] = Tag::neutral();
+    }
+
+    void build(const vector<int>& a, int node, int start, int end) {
+        if (start == end) {
+            tree[node] = Node::from_value(a[start]);
+        } else {
+            int mid = (start + end) / 2;
+            build(a, 2 * node, start, mid);
+            build(a, 2 * node + 1, mid + 1, end);
+            tree[node] = merge(tree[2 * node], tree[2 * node + 1]);
+        }
+    }
+
+    void update(int l, int r, long long val, int node, int start, int end) {
+        if (start > end || start > r || end < l) return;
+        
+        if (start >= l && end <= r) {
+
+            //MODIFY THIS
+            //MODIFY THIS
+            //MODIFY THIS
+
+            Tag new_tag = {val};
+            apply_tag(tree[node], new_tag);
+            combine_tags(lazy[node], new_tag);
+            return;
+        }
+
+        push(node);
+        int mid = (start + end) / 2;
+        update(l, r, val, 2 * node, start, mid);
+        update(l, r, val, 2 * node + 1, mid + 1, end);
+        tree[node] = merge(tree[2 * node], tree[2 * node + 1]);
+    }
+
+    Node query(int l, int r, int node, int start, int end) {
+        if (start > end || start > r || end < l) return Node::neutral();
+        if (start >= l && end <= r) return tree[node];
+
+        push(node);
+        int mid = (start + end) / 2;
+        return merge(query(l, r, 2 * node, start, mid),
+                     query(l, r, 2 * node + 1, mid + 1, end));
+    }
+
+    // Descent: Find first index in [l, r] satisfying check()
+    int find_first(int l, int r, long long k, int node, int start, int end) {
+
+        if (start > end || start > r || end < l || !check(tree[node], k)) {
+            return -1;
+        }
+        
+        if (start == end) return start;
+
+        push(node);
+        int mid = (start + end) / 2;
+        
+        int res = find_first(l, r, k, 2 * node, start, mid);
+        
+        if (res == -1) {
+            res = find_first(l, r, k, 2 * node + 1, mid + 1, end);
+        }
+        
         return res;
     }
 
-    // --- MODIFY HERE (4/6) ---
-    // apply parents lazy to childs value
-    // how child segtree node should look like after applying range update to childs range
-    void apply(int v, const Lazy& lazy_upd, int len) {
-
-        t[v].val += lazy_upd.val * len;
-    }
-
-    // --- MODIFY HERE (5/6) ---
-    // apply parents lazy to childs lazy
-    // how child lazy node should look like after applying range update to childs range
-    void combine(int v, const Lazy& parent_lazy) {
-        if (lz[v].id) {
-            lz[v] = parent_lazy;
-        } else {
-            lz[v].val += parent_lazy.val;
-            lz[v].id = false;
-        }
-    }
-
-    void reset(int v) {
-        lz[v] = Lazy();
-    }
-
-    bool is_id(int v) {
-        return lz[v].id;
-    }
-
-    // --- MODIFY HERE (6/6) ---
-    int find_first(int v, int tl, int tr, int ql, int qr, long long val) {
-        if (tr < ql || tl > qr) {
-            return -1;
-        }
-
-        push(v, tl, tr);
-
-        // Example for "find first >= val" with min query:
-        if (t[v].val >= val) {
-            return max(tl, ql);
-        }
-
-        if (tl == tr) {
-            return -1; 
-        }
-
-        int tm = (tl + tr) / 2;
-        
-        int res_left = find_first(v * 2, tl, tm, ql, qr, val);
-        if (res_left != -1) {
-            return res_left;
-        }
-
-        return find_first(v * 2 + 1, tm + 1, tr, ql, qr, val);
-    }
-
-    // --- CORE LOGIC (Usually no changes needed) ---
-
-    // Push lazy updates down to children
-    void push(int v, int tl, int tr) {
-        if (!is_id(v)) { 
-            int tm = (tl + tr) / 2;
-            int left_child = v * 2;
-            int right_child = v * 2 + 1;
-
-            apply(left_child, lz[v], tm - tl + 1);
-            combine(left_child, lz[v]);
-
-            apply(right_child, lz[v], tr - (tm + 1) + 1);
-            combine(right_child, lz[v]);
-
-            reset(v);
-        }
-    }
-
-    // Build the tree from an initial array
-    void build(int v, int tl, int tr, const vector<long long>& a) {
-        if (tl == tr) {
-            t[v] = Node(a[tl]);
-        } else {
-            int tm = (tl + tr) / 2;
-            build(v * 2, tl, tm, a);
-            build(v * 2 + 1, tm + 1, tr, a);
-            t[v] = merge(t[v * 2], t[v * 2 + 1]);
-        }
-    }
-
-    void update(int v, int tl, int tr, int l, int r, const Lazy& val) {
-        if (l > r) {
-            return;
-        }
-        if (l == tl && r == tr) {
-            apply(v, val, tr - tl + 1);
-            combine(v, val);
-        } else {
-            push(v, tl, tr);
-            int tm = (tl + tr) / 2;
-            update(v * 2, tl, tm, l, min(r, tm), val);
-            update(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r, val);
-            t[v] = merge(t[v * 2], t[v * 2 + 1]);
-        }
-    }
-
-    Node query(int v, int tl, int tr, int l, int r) {
-        if (l > r) {
-            return Node(); // Return identity element
-        }
-        if (l == tl && r == tr) {
-            return t[v];
-        }
-        
-        push(v, tl, tr);
-        int tm = (tl + tr) / 2;
-        
-        Node left_res = query(v * 2, tl, tm, l, min(r, tm));
-        Node right_res = query(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r);
-        
-        return merge(left_res, right_res);
-    }
-
-    
+    void build(const vector<int>& a) { build(a, 1, 0, n - 1); }
+    void update(int l, int r, long long val) { update(l, r, val, 1, 0, n - 1); }
+    Node query(int l, int r) { return query(l, r, 1, 0, n - 1); }
+    int find_first(int l, int r, long long k) { return find_first(l, r, k, 1, 0, n - 1); }
 };
 
+int main() {
+    vector<int> arr = {1, 2, 3, 4, 5};
+    LazySegTree st(arr);
 
+    st.update(1, 3, 10);
+
+    cout << "Sum: " << st.query(0, 4).sum << endl;
+
+    cout << "First >= 13: " << st.find_first(0, 4, 13) << endl;
+}
