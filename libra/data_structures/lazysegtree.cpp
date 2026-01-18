@@ -1,8 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// MODIFY THIS SECTION and UPDATE
-
+// MODIFY THIS SECTION, UPDATE SECTION and PUSH FUNCTION
 struct Node {
     long long sum;
     long long max_val;
@@ -76,6 +75,10 @@ struct LazySegTree {
     }
 
     void push(int node) {
+        
+        //MODIFY THIS
+        //MODIFY THIS
+        //MODIFY THIS
         if (lazy[node].add == 0) return; 
 
         apply_tag(tree[2 * node], lazy[node]);
@@ -106,8 +109,8 @@ struct LazySegTree {
             //MODIFY THIS
             //MODIFY THIS
             //MODIFY THIS
-
             Tag new_tag = {val};
+
             apply_tag(tree[node], new_tag);
             combine_tags(lazy[node], new_tag);
             return;
