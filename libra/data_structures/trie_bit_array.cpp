@@ -1,6 +1,5 @@
 // faster than normal trie but not memeroy efficinet as there is no deletions
 
-
 #include<bits/stdc++.h>
 using namespace std;
 

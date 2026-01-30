@@ -12,5 +12,4 @@ int binpow(int a, int b, long long m = mod){
     }
     return res%m;
 }
-
 // binpow(number,mod-2,mod) gives mod inverse if mod is prime

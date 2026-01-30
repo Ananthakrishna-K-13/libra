@@ -59,8 +59,6 @@ bool check(const Node& node, long long k) {
     return node.max_val >= k;
 }
 
-// LAZY SEGMENT TREE
-
 struct LazySegTree {
     int n;
     vector<Node> tree;
@@ -76,8 +74,6 @@ struct LazySegTree {
 
     void push(int node) {
         
-        //MODIFY THIS
-        //MODIFY THIS
         //MODIFY THIS
         if (lazy[node].add == 0) return; 
 
@@ -106,8 +102,6 @@ struct LazySegTree {
         
         if (start >= l && end <= r) {
 
-            //MODIFY THIS
-            //MODIFY THIS
             //MODIFY THIS
             Tag new_tag = {val};
 
@@ -159,14 +153,4 @@ struct LazySegTree {
     Node query(int l, int r) { return query(l, r, 1, 0, n - 1); }
     int find_first(int l, int r, long long k) { return find_first(l, r, k, 1, 0, n - 1); }
 };
-
-int main() {
-    vector<int> arr = {1, 2, 3, 4, 5};
-    LazySegTree st(arr);
-
-    st.update(1, 3, 10);
-
-    cout << "Sum: " << st.query(0, 4).sum << endl;
-
-    cout << "First >= 13: " << st.find_first(0, 4, 13) << endl;
-}
+//LazySegTree st(arr);

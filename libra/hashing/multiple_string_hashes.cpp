@@ -1,7 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define int long long
-#define INF (int)1e18
 
 ////////// !!!!!!!!!!!!   1-based indexing !!!!!!!!!!!!!!!!!!! //////////////
 
@@ -91,14 +89,5 @@ struct Hash{
     }
 };
 
-
-
-int32_t main() {
-    string str = "abcabc";
-    int n = str.size();
-    Hash h;
-    h.init(n,2,str);
-
-    // h.getfwhash();
-    cout<<h.equal(1,3,4,6)<<'\n';
-}
+// Hash h;
+// h.init(n,2,str); (length,no of hashes,string)

@@ -1,10 +1,7 @@
 // Might give segmentation fault locally for large MAXN but will work in custon invocation
 
-
 #include<bits/stdc++.h>
-
 using namespace std;
-#define int long long
 
 int log2_floor(unsigned long i) {
     return i ? __builtin_clzll(1) - __builtin_clzll(i) : -1;
@@ -14,7 +11,7 @@ signed main(){
 
     vector<int> array = {1,5,3,1,5}; 
 
-    int  MAXN = 2*1e5, K = log2_floor(MAXN),N=5;  // maxn is max size of array, k is atleast floor of log base 2 maxn
+    int  MAXN = 2*1e5, K = log2_floor(MAXN),N=5;
     int st[K + 1][MAXN];
 
     copy(array.begin(), array.end(), st[0]);

@@ -125,18 +125,4 @@ struct XorBasis {
         return res;
     }
 };
-
-int main() {
-    XorBasis<long long> xb;
-    vector<long long> arr = {2, 4, 5}; 
-    for(long long x : arr) xb.insert(x);
-
-    cout << "Max XOR: " << xb.max_xor() << endl;       // 7
-    cout << "Min XOR start 7: " << xb.min_xor(7) << endl; // 0
-    
-    // Total subsets = 2^3 = 8. Values: 0,1,2,3,4,5,6,7
-    cout << "3rd smallest: " << xb.kth_smallest(3) << endl; // 2
-    cout << "Count < 4: " << xb.count_less(4) << endl;      // 4 (0,1,2,3)
-    
-    return 0;
-}
+// XorBasis<long long> xb;

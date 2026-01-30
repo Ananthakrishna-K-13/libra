@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-
 #define int int
 template<const int &MOD>
 struct _m_int {

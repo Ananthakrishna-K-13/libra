@@ -2,7 +2,6 @@
 using namespace std;
 
 // MODIFY THIS SECTION, BUILD and UPDATE
-
 struct Node {
     long long sum;
     long long max_val;
@@ -25,8 +24,6 @@ Node merge(const Node& a, const Node& b) {
 bool check(const Node& node, long long k) {
     return node.max_val >= k; 
 }
-
-//  SEGMENT TREE TEMPLATE
 
 struct SegTree {
     int n;
@@ -119,21 +116,4 @@ struct SegTree {
     Node query(int l, int r) { return query(l, r, 1, 0, n - 1); }
     int find_first(int l, int r, long long k) { return find_first(l, r, k, 1, 0, n - 1); }
 };
-
-int main() {
-    vector<int> arr = {1, 3, 5, 2, 4, 6};
-    int n = arr.size();
-    SegTree st(arr);
-
-    Node res = st.query(1, 4);
-
-    int idx = st.find_first(0, 5, 4); 
-    cout << "First index >= 4: " << idx << endl;
-
-    st.update(2, 1); 
-
-    idx = st.find_first(0, 5, 4);
-    cout << "First index >= 4: " << idx << endl;
-
-    return 0;
-}
+// SegTree st(arr);
