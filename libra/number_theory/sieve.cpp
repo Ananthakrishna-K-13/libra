@@ -42,6 +42,7 @@ vector<pair<int,int>> getPrimeFactors(int x) {
 
 // all divisors in O(log n + #divisors(n))
 // #divisors of n = n ^ 1/3
+// Can be precomputed for all numbers in O(mlog m) sieve like, better than using this function
 vector<int> getDivisors(int x) {
     auto pf = getPrimeFactors(x);
     vector<int> divisors = {1};
