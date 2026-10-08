@@ -8,5 +8,5 @@ template<class T> using ordered_multiset = tree<T, null_type, less_equal<T>, rb_
 
 //* X.find_by_order(k) return kth element. 0 indexed.
 //* X.order_of_key(k) returns count of elements strictly less than k.
-
+// WARNING : o r d e r e d _ m u l t i s e t erase () is buggy .
 

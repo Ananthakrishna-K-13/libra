@@ -1,10 +1,6 @@
 #include<bits/stdc++.h> 
 using namespace std;
 
-#pragma GCC target("avx2")
-#pragma GCC optimize("O3")
-#pragma GCC optimize("unroll-loops")
-
 #ifdef ZEBRA
 #include "dbg.hpp"
 #else
@@ -17,7 +13,7 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 
 void solve(){
-    
+
 }
 
 signed main(){
