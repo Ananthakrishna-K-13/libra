@@ -13,7 +13,7 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 
 void solve(){
-
+    
 }
 
 signed main(){

@@ -1,36 +1,48 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-// fenwick tree for range sum
+// Fenwick Tree for range sum queries.
+// Internal indexing: 1-based
+// Public API:        0-based
 
 struct Fenwick {
-    vector<int> bit; 
+    vector<long long> bit;
     int n;
 
-    Fenwick(int n) {
-        this->n = n + 1;
-        bit.assign(n + 1, 0);
+    Fenwick(int n) : n(n), bit(n + 1, 0) {}
+
+    Fenwick(const vector<int>& a) : n(a.size()), bit(n + 1, 0) {
+
+        for (int i = 1; i <= n; i++) {
+            bit[i] = a[i - 1];
+        }
+
+        for (int i = 1; i <= n; i++) {
+            int p = i + (i & -i);
+
+            if (p <= n) {
+                bit[p] += bit[i];
+            }
+        }
     }
 
-    Fenwick(vector<int> a)
-        : Fenwick(a.size()) {
-        for (size_t i = 0; i < a.size(); i++)
-            add(i, a[i]);
-    }
+    long long sum(int idx) {
+        long long ret = 0;
 
-    int sum(int idx) {
-        int ret = 0;
-        for (++idx; idx > 0; idx -= idx & -idx)
+        for (++idx; idx > 0; idx -= idx & -idx) {
             ret += bit[idx];
+        }
+
         return ret;
     }
 
-    int sum(int l, int r) {
+    long long sum(int l, int r) {
         return sum(r) - sum(l - 1);
     }
 
-    void add(int idx, int delta) {
-        for (++idx; idx < n; idx += idx & -idx)
+    void add(int idx, long long delta) {
+        for (++idx; idx <= n; idx += idx & -idx) {
             bit[idx] += delta;
+        }
     }
 };

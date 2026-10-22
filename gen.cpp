@@ -8,7 +8,7 @@ long long randInt(long long L, long long R) {
 }
 
 int main() {
-
-    int n = randInt(1, 5);
+    int a = randInt(1, 1000000000);
+    int b = randInt(0,9);
     return 0;
 }
